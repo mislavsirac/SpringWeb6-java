@@ -1,56 +1,35 @@
 package hr.tvz.sirac.studapp;
-
-import jakarta.persistence.*;
 import java.util.Date;
-import java.util.List;
+import javax.validation.constraints.*;
 
-@Entity
-@Table(name = "STUDENT") // Specify the table name
-public class Student {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class StudentCommand {
+    @NotBlank(message = "Ime ne smije biti prazno.")
     private String name;
+
+    @NotBlank(message = "Prezime ne smije biti prazno.")
     private String lastName;
+
+    @NotNull(message = "Datum rođenja ne smije biti prazan.")
+    @Past(message = "Datum rođenja ne smije biti u budućnosti.")
     private Date birthDate;
+
+    @NotBlank(message = "JMBAG ne smije biti prazan.")
+    @Size(min = 10, max = 10, message = "JMBAG mora imati točno 10 znamenki.")
     private String JMBAG;
+
+    @NotNull(message = "ECTS bodovi ne smiju biti prazni.")
+    @Min(value = 0, message = "ECTS bodovi ne smiju biti manji od 0.")
+    @Max(value = 60, message = "ECTS bodovi ne smiju biti veći od 60.")
     private Integer ECTS;
 
+    public StudentCommand() {}
 
-    @ManyToMany
-    @JoinTable(
-            name = "STUDENT_COURSE",
-            joinColumns = @JoinColumn(name = "STUDENT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
-    private List<Course> courses;
-
-    public Student(String name, String lastName, Date birthDate, String JMBAG, Integer ECTS) {
+    public StudentCommand(String name, String lastName, Date birthDate, String JMBAG, Integer ECTS) {
         this.name = name;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.JMBAG = JMBAG;
         this.ECTS = ECTS;
-    }
-
-    public Student() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
     }
 
     public String getName() {
